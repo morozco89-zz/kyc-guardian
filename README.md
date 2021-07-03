@@ -150,3 +150,23 @@ ERROR	hardcoded_name
 ```
 
 Al finalizar el proceso se mostrará el estado de compliance con la iniciativa ingresada. Si el usuario es no compliant y tiene challenge de usuarios pendientes, estos se mostrarán en una lista.
+
+## **Shield - Replica**
+
+Ejecutar el comando
+
+```bash
+kyc-guardian
+```
+
+Seleccionar con las flechas la opción `Shield - Replica` y presionar la tecla enter.
+
+```
+? What would you like to do? (Use arrow keys)
+  CA - MLB 
+❯ Shield - Replica
+```
+
+Ingresar el pedido de información.
+
+Aquí dejo un video de ejemplo en el [drive compartido](https://drive.google.com/file/d/1IlPw2EmoQhWdLEWM_V7n5ws6sjLeGkJS/view?usp=sharing).
