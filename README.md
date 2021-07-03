@@ -14,7 +14,8 @@ Debido a que este proyecto es un Work in Progress se recomienda el siguiente mé
 
 - Instalar node. Se recomienda el uso de nvm para cambiar con facilidad entre versiones ([guía de instalación](https://blog.jamesauble.com/install-nvm-on-mac-with-brew-adb921fb92cc)).
 - Clonar este repo.
-- En el root del proyecto ejecutar en la terminal:
+- Descargar el archivo [fixtures.js](https://drive.google.com/file/d/1VkwwXgmDesFHBIwK4HDru19AaE159vzb/view?usp=sharing) del drive compartido y dejarlo en el directorio `/src` del proyecto. Aquí se almacenan variables globales del programa como el usuario ldap y token fury por defecto.
+- Desde el root del proyecto ejecutar en la terminal:
 ```bash
 npm link
 ```
@@ -106,7 +107,7 @@ Complete IV information
 ? Enter path for power of attorney document ./awpoa.pdf
 ```
 
-Esto iniciará el proceso de cargue de documentos. Si el documento fue cargado correctamente se mostrará en `DONE` o `DONE` de lo contrario.
+Esto iniciará el proceso de cargue de documentos. Si el documento fue cargado correctamente se mostrará en `DONE` o `ERROR` de lo contrario.
 
 ```
 Uploading documentation for user 717324611
@@ -117,7 +118,7 @@ Uploading documentation for user 717324611
 	DONE	user_company_partnership_deed
 ```
 
-Posteriormente se iniciará el proceso de hardcoding de cada challenge.
+Posteriormente se iniciará el proceso de hardcoding de cada challenge. Aquí se muestra el listado de todos los hardcodes que se hacen.
 
 ```
 Hardcoding challenges for user 717324611
@@ -145,4 +146,6 @@ Si falla algún hardcoding se mostrará el cuerpo de la petición para que pueda
 ```
 ERROR	hardcoded_name
 {"first_name":"LIGIA MARIA","last_name":" FONTANA NUNES","caller_id":"micortes","reason":"Pedido de CA","comment":"Pedido de CA"}
+```
 
+Al finalizar el proceso se mostrará el estado de compliance con la iniciativa ingresada. Si el usuario es no compliant y tiene challenge de usuarios pendientes, estos se mostrarán en una lista.
