@@ -53,6 +53,118 @@ export const fetchChunks = (context) => {
 };
 
 /**
+ * Puts user challenge challengeName for userID with challengeData
+ * 
+ * Example context:
+ * {
+ *      token: 'abc',
+ *      ldap: 'micortes',
+ *      initiative: 'ted',
+ *      reason: 'Pedido de réplica shield',
+ *      comment: 'Pedido de réplica shield',
+ *      runner_user_id: 12345,
+ *      user_ids: [ 111, 222, 333, 444 ]
+ * }
+ * @param {Object} context Context
+ * @param {Integer} userID User id
+ * @param {String} challengeName Challenge name
+ * @param {Object} challengeData Challenge data
+ * @return {Promise}
+ */
+export const putUserChallenge = (context, userID, challengeName, challengeData) => {
+    const engineClient = new EngineClient(HTTP_ENGINE_SLEEP_TIME_BEFORE_RETRY);
+    const promise = new Promise((resolve, reject) => {
+        engineClient.on('put-user-challenge.success', () => {
+            console.log(`\t%s\t${challengeName}`, chalk.green.bold('DONE'));
+            resolve(context);
+        });
+        engineClient.on('put-user-challenge.recovered', () => {
+            process.stdout.clearLine();
+            process.stdout.cursorTo(0);
+            console.log(`\t%s\t${challengeName}`, chalk.green.bold('DONE'));
+            resolve(context);
+        });
+        engineClient.on('put-user-challenge.fail', ({attempt}) => {
+            process.stdout.clearLine();
+            process.stdout.cursorTo(0);
+            process.stdout.write(`Error putting user challenge ${challengeName} for user ${userID}. Attempt ${attempt} of ${engineClient.maxRetries}`);
+        });
+        engineClient.on('put-user-challenge.exhausted', () => {
+            process.stdout.clearLine();
+            process.stdout.cursorTo(0);
+            reject(`exhausted ${challengeName} attempts`);
+        });
+    });
+    const request = {
+        initiativeID: context.initiative,
+        token: context.token,
+        userID,
+        challengeName,
+        challengeData,
+    };
+
+    engineClient.putUserChallenge(request);
+
+    return promise;
+};
+
+/**
+ * Puts backoffice challenge challengeName for userID with challengeData
+ * 
+ * Example context:
+ * {
+ *      token: 'abc',
+ *      ldap: 'micortes',
+ *      initiative: 'ted',
+ *      reason: 'Pedido de réplica shield',
+ *      comment: 'Pedido de réplica shield',
+ *      runner_user_id: 12345,
+ *      user_ids: [ 111, 222, 333, 444 ]
+ * }
+ * @param {Object} context Context
+ * @param {Integer} userID User id
+ * @param {String} challengeName Challenge name
+ * @param {Object} challengeData Challenge data
+ * @return {Promise}
+ */
+ export const putBackofficeChallenge = (context, userID, challengeName, challengeData) => {
+    const engineClient = new EngineClient(HTTP_ENGINE_SLEEP_TIME_BEFORE_RETRY);
+    const promise = new Promise((resolve, reject) => {
+        engineClient.on('put-backoffice-challenge.success', () => {
+            console.log(`\t%s\t${challengeName}`, chalk.green.bold('DONE'));
+            resolve(context);
+        });
+        engineClient.on('put-backoffice-challenge.recovered', () => {
+            process.stdout.clearLine();
+            process.stdout.cursorTo(0);
+            console.log(`\t%s\t${challengeName}`, chalk.green.bold('DONE'));
+            resolve(context);
+        });
+        engineClient.on('put-backoffice-challenge.fail', ({attempt}) => {
+            process.stdout.clearLine();
+            process.stdout.cursorTo(0);
+            process.stdout.write(`Error putting backoffice challenge ${challengeName} for user ${userID}. Attempt ${attempt} of ${engineClient.maxRetries}`);
+        });
+        engineClient.on('put-backoffice-challenge.exhausted', () => {
+            process.stdout.clearLine();
+            process.stdout.cursorTo(0);
+            reject(`exhausted ${challengeName} attempts`);
+        });
+    });
+    const request = {
+        initiativeID: context.initiative,
+        token: context.token,
+        userID,
+        challengeName,
+        challengeData,
+    };
+
+    engineClient.putBackofficeChallenge(request);
+
+    return promise;
+};
+
+/**
  * Hardcode challengeName for userID with challengeData
  * 
  * Example context:
@@ -69,6 +181,7 @@ export const fetchChunks = (context) => {
  * @param {Integer} userID User id
  * @param {String} challengeName Challenge name
  * @param {Object} challengeData Challenge data
+ * @return {Promise}
  */
 export const hardCodeChallenge = (context, userID, challengeName, challengeData) => {
     const engineClient = new EngineClient(HTTP_ENGINE_SLEEP_TIME_BEFORE_RETRY);
@@ -165,11 +278,11 @@ const assertComplianceStatus = (response, request) => {
     const complianceStatus = objectPath.get(response, 'is_initiative_compliant', false);
 
     if (complianceStatus) {
-        console.log(`\n\t%s\t${request.userID}`, chalk.green.bold('COMPLIANT'));
+        console.log(`\t%s\t${request.userID}`, chalk.green.bold('COMPLIANT'));
         return;
     }
 
-    console.log(`\n\t%s\t${request.userID}`, chalk.red.bold('NO COMPLIANT'));
+    console.log(`\t%s\t${request.userID}`, chalk.red.bold('NO COMPLIANT'));
     
     if (!response.challenges) {
         return;

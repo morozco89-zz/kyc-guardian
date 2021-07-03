@@ -1,6 +1,7 @@
 import { prompt, promptConfirmation } from './prompt';
 import { fetchChunks } from './services';
-import { buildHardcodes, log, putHardcodes, buildUserChallenges, validateCompliance } from './processors';
+import { buildHardcodes, buildUserChallenges, buildBackofficeChallenges } from './builders';
+import { log, processHardcodeChallenges, processUserChallenges, processBackofficeChallenges, validateCompliance } from './processors';
 
 export const shieldReplica = () => {
     prompt()
@@ -9,7 +10,10 @@ export const shieldReplica = () => {
         .then(fetchChunks)
         .then(buildHardcodes)
         .then(buildUserChallenges)
-        .then(putHardcodes)
+        .then(buildBackofficeChallenges)
+        .then(processHardcodeChallenges)
+        .then(processUserChallenges)
+        .then(processBackofficeChallenges)
         .then(validateCompliance)
-        .catch(console.log);
+        .catch(log);
 };
