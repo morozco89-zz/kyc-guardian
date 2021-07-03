@@ -14,6 +14,7 @@ Debido a que este proyecto es un Work in Progress se recomienda el siguiente mé
 
 - Instalar node. Se recomienda el uso de nvm para cambiar con facilidad entre versiones ([guía de instalación](https://blog.jamesauble.com/install-nvm-on-mac-with-brew-adb921fb92cc)).
 - Clonar este repo.
+- Instalar las dependencias ejecutando el comando `npm i` en el root del proyecto.
 - Descargar el archivo [fixtures.js](https://drive.google.com/file/d/1VkwwXgmDesFHBIwK4HDru19AaE159vzb/view?usp=sharing) del drive compartido y dejarlo en el directorio `/src` del proyecto. Aquí se almacenan variables globales del programa como el usuario ldap y token fury por defecto.
 - Desde el root del proyecto ejecutar en la terminal:
 ```bash
