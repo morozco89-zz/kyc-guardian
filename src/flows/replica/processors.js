@@ -272,7 +272,7 @@ const buildCompanyBeneficiaries = (context) => ({
  * }
  * @param {Object} context Execute list of hardcodes for all user_ids
  */
-export const processReplicas = async (context) => {
+export const putHardcodes = async (context) => {
     for (const userID of context.user_ids) {
         console.log(chalk.bold(`\nHardcoding challenges for user ${userID}\n`));
         for (const hardCodeName in context.hardcodes) {

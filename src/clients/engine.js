@@ -3,14 +3,14 @@ import EventEmitter from 'events';
 import { ENGINE_READ_SCOPE, ENGINE_WRITE_SCOPE, HTTP_CLIENT_TIMEOUT, HTTP_CLIENT_DEFAULT_MAX_RETRIES } from '../fixtures';
 import objectPath from 'object-path';
 
-export const hardCode = (request) => {
+const put = (request, challengeType) => {
     const data = JSON.stringify(request.challengeData);
     const options = {
         hostname: ENGINE_WRITE_SCOPE,
         port: 443,
         timeout: HTTP_CLIENT_TIMEOUT,
         method: 'PUT',
-        path: `/kyc-engine/v1/users/${request.userID}/hardcoded-challenges/${request.challengeName}/completed`,
+        path: `/kyc-engine/v1/users/${request.userID}/${challengeType}-challenges/${request.challengeName}/completed`,
         headers: {
             'X-Auth-Token': request.token,
             'x-caller-scopes': 'admin',
@@ -57,6 +57,70 @@ export const hardCode = (request) => {
         req.write(data);
         req.end();
     });
+};
+
+/**
+ * Puts hardcoded challenge. Example request:
+ * {
+ *      userID: 12345,
+ *      challengeName: 'hardcoded_proof_of_life',
+ *      token: 'FURY-TOKEN',
+ *      initiativeID: 'cx-support',
+ *      challengeData: {
+ *          selfie_url: 'https://pol.jpg',
+ *          comment: 'Pedido CA',
+ *          reason: 'Pedido CA',
+ *          caller_id: 'micortes',
+ *      }
+ * }
+ * @param {Object} request Request
+ * @returns {Promise}
+ */
+export const hardCode = (request) => {
+    return put(request, 'hardcoded');
+};
+
+/**
+ * Puts user challenge. Example request:
+ * {
+ *      userID: 12345,
+ *      challengeName: 'user_company_regulated',
+ *      token: 'FURY-TOKEN',
+ *      initiativeID: 'cx-support',
+ *      challengeData: {
+ *          is_fatca: true,
+ *          is_regulated_entity: null,
+ *      }
+ * }
+ * @param {Object} request Request
+ * @returns {Promise}
+ */
+export const putUserChallenge = (request) => {
+    return put(request, 'user');
+};
+
+/**
+ * Puts backoffice challenge. Example request:
+ * {
+ *      userID: 12345,
+ *      challengeName: 'backoffice_legally_authorized',
+ *      token: 'FURY-TOKEN',
+ *      initiativeID: 'cx-support',
+ *      challengeData: {
+ *          user_id: 1345,
+ *          name: 'backoffice_legally_authorized',
+ *          comment: 'ok',
+ *          case_id: '0',
+ *          result: 'ok',
+ *          resources: {},
+ *          data: {}
+ *      }
+ * }
+ * @param {Object} request Request
+ * @returns {Promise}
+ */
+export const putBackofficeChallenge = (request) => {
+    return put(request, 'backoffice');
 };
 
 export const getUserChallenges = (request) => {
@@ -203,6 +267,14 @@ export class EngineClient extends EventEmitter {
 
     async hardcode(request) {
         await this.do('hardcode', hardCode, request);
+    }
+
+    async putUserChallenge(request) {
+        await this.do('put-user-challenge', putUserChallenge, request);
+    }
+
+    async putBackofficeChallenge(request) {
+        await this.do('put-backoffice-challenge', putBackofficeChallenge, request);
     }
 
     async do(namespace, fn, request, validator = () => {}) {
