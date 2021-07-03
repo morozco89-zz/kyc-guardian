@@ -230,13 +230,21 @@ const buildOccupation = (context) => ({
     }
 });
 
-const buildRepresentativeRelationship = (context) => ({
-    hardcoded_representative_relationship: {
-        comment: context.comment,
-        reason: context.reason,
-        caller_id: context.ldap,
+const buildRepresentativeRelationship = (context) => {
+    let relationship = objectPath.get(context, 'develop.raw_execution_result.MapChunks.legally_authorized.representative_relationship', '');
+    if (relationship === '') {
+        relationship = objectPath.get(context, 'develop.raw_execution_result.MapChunks.representative_relationship.representative_relationship', '');
     }
-});
+
+    return {
+        hardcoded_representative_relationship: {
+            relationship: relationship,
+            comment: context.comment,
+            reason: context.reason,
+            caller_id: context.ldap,
+        }
+    };
+};
 
 const buildCompanyBeneficiaries = (context) => ({
     hardcoded_company_beneficiaries: {
